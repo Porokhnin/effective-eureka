@@ -1,0 +1,56 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HTTP_PORTS": "8000",
+        "PORT": "8000",
+        "MONOLITH_URL": "http://monolith:8080",
+        "MOVIES_SERVICE_URL": "http://movies-service:8081",
+        "EVENTS_SERVICE_URL": "http://events-service:8082",
+        "GRADUAL_MIGRATION": "true",
+        "MOVIES_MIGRATION_PERCENT": "50"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:8000"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
+    "docker": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_HTTP_PORTS": "8000",
+        "PORT": "8000",
+        "MONOLITH_URL": "http://monolith:8080",
+        "MOVIES_SERVICE_URL": "http://movies-service:8081",
+        "EVENTS_SERVICE_URL": "http://events-service:8082",
+        "GRADUAL_MIGRATION": "true",
+        "MOVIES_MIGRATION_PERCENT": "50"
+      },
+      "httpPort": 8000,
+      "publishAllPorts": true,
+      "useSSL": false
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:63832",
+      "sslPort": 0
+    }
+  }
+}
