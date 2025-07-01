@@ -3,7 +3,7 @@ name: Docker Build and Push
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [ main, cinema ]
     paths:
       - 'src/**'
       - '.github/workflows/docker-build-push.yml'
@@ -107,7 +107,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-          
+
       - name: Extract metadata (tags, labels) for Proxy Service
         id: meta-proxy
         uses: docker/metadata-action@v4
