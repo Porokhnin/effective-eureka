@@ -15,7 +15,7 @@
  - Управление рекомендациями
 
 Ниже представлена концептуальная схема
-![C4 Cinema TO-BE](docs/cinema-TO-BE.svg)
+![C4 Cinema TO-BE](docs/cinema-TO-BE.png)
 
 ## Задание 2
 
@@ -31,7 +31,7 @@
 Реализован сервис cinema.events с consumer'ами и producer'ами.
 Тесты все проходят.
 
-![скриншот тестов](docs/newman%20tests.png)
+![скриншот тестов](docs/newman_tests.png)
 ![скриншот состояния топиков Kafka](docs/topics.png)
 
 
@@ -46,6 +46,8 @@
 ### CI/CD
 
  В папке .github/worflows доработайте деплой новых сервисов proxy и events в docker-build-push.yml , чтобы api-tests при сборке отрабатывали корректно при отправке коммита в вашу новую ветку.
+
+Доработаны worflows для тестов и для пуша образов. 
 
 Нужно доработать 
 ```yaml
@@ -145,6 +147,8 @@ cat .docker/config.json | base64
   - Необходимо создать Deployment и Service 
   - Доработайте ingress.yaml, чтобы можно было с помощью тестов проверить создание событий
   - Выполните дальшейшие шаги для поднятия кластера:
+
+  0. helm install --namespace cinemaabyss nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx
 
   1. Создайте namespace:
   ```bash
@@ -246,9 +250,16 @@ cat .docker/config.json | base64
   Часть тестов с health-чек упадет, но создание событий отработает.
   Откройте логи event-service и сделайте скриншот обработки событий
 
+![скриншот тестов](docs/kubernetes_newman_tests.png)
+
+
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
 
+![Скриншот вывода при вызове https://cinemaabyss.example.com/api/movies](docs/cinemaabyss.example.com7api7movies.png)
+![Скриншот вывода при вызове https://cinemaabyss.example.com/api/movies](docs/cinemaabyss.example.com7api7movies_pretty.png)
+
+![Скриншот вывода event-service после вызова тестов](docs/kubernetes_consuming.png)
 
 ## Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
