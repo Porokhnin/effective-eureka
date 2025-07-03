@@ -148,12 +148,14 @@ cat .docker/config.json | base64
   - Доработайте ingress.yaml, чтобы можно было с помощью тестов проверить создание событий
   - Выполните дальшейшие шаги для поднятия кластера:
 
-  0. helm install --namespace cinemaabyss nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx
 
   1. Создайте namespace:
   ```bash
   kubectl apply -f src/kubernetes/namespace.yaml
   ```
+
+  1. 1. helm install --namespace cinemaabyss nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx
+
   2. Создайте секреты и переменные
   ```bash
   kubectl apply -f src/kubernetes/configmap.yaml
@@ -335,6 +337,8 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
+![Скриншот развертывания helm](docs/helm_install.png)
+![Скриншот вывода cinemaabyss.example.com/api/movies](helm_cinemaabyss.example.com7api7movies.png)
 
 # Задание 5
 Компания планирует активно развиваться и для повышения надежности, безопасности, реализации сетевых паттернов типа Circuit Breaker и канареечного деплоя вам как архитектору необходимо развернуть istio и настроить circuit breaker для monolith и movies сервисов.
