@@ -338,7 +338,7 @@ https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
 ![Скриншот развертывания helm](docs/helm_install.png)
-![Скриншот вывода cinemaabyss.example.com/api/movies](helm_cinemaabyss.example.com7api7movies.png)
+![Скриншот вывода cinemaabyss.example.com/api/movies](docs/helm_cinemaabyss.example.com7api7movies.png)
 
 # Задание 5
 Компания планирует активно развиваться и для повышения надежности, безопасности, реализации сетевых паттернов типа Circuit Breaker и канареечного деплоя вам как архитектору необходимо развернуть istio и настроить circuit breaker для monolith и movies сервисов.
@@ -404,6 +404,10 @@ You can see 21 for the upstream_rq_pending_overflow value which means 21 calls s
 ```
 
 Приложите скриншот работы circuit breaker'а
+
+istio_circuit_braker
+![Скриншот вывода cinemaabyss.example.com/api/movies](docs/istio_circuit_braker.png)
+
 
 Удаляем все
 ```bash
