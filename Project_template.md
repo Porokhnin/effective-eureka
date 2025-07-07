@@ -3,61 +3,36 @@
 ## Задание 1
 
 1. Спроектируйте to be архитектуру КиноБездны, разделив всю систему на отдельные домены и организовав интеграционное взаимодействие и единую точку вызова сервисов.
-Результат представьте в виде контейнерной диаграммы в нотации С4.
-Добавьте ссылку на файл в этот шаблон
-[ссылка на файл](ссылка)
+   
+Я выделил следующие бизнес фунцкии:
+ - Управление доступом
+ - Управление пользователями
+ - Управление фильмами
+ - Управление просмотрами
+ - Управление рекомендациями
+ - Управление подпиской
+ - Управление отзывами
+ - Управление рекомендациями
 
+Ниже представлена концептуальная схема
+![C4 Cinema TO-BE](docs/cinema-TO-BE.png)
 
 ## Задание 2
 
 ### 1. Proxy
 Команда КиноБездны уже выделила сервис метаданных о фильмах movies и вам необходимо реализовать бесшовный переход с применением паттерна Strangler Fig в части реализации прокси-сервиса (API Gateway), с помощью которого можно будет постепенно переключать траффик, используя фиче-флаг.
 
-
-Реализуйте сервис на любом языке программирования в ./src/microservices/proxy.
-Конфигурация для запуска сервиса через docker-compose уже добавлена
-```yaml
-  proxy-service:
-    build:
-      context: ./src/microservices/proxy
-      dockerfile: Dockerfile
-    container_name: cinemaabyss-proxy-service
-    depends_on:
-      - monolith
-      - movies-service
-      - events-service
-    ports:
-      - "8000:8000"
-    environment:
-      PORT: 8000
-      MONOLITH_URL: http://monolith:8080
-      #монолит
-      MOVIES_SERVICE_URL: http://movies-service:8081 #сервис movies
-      EVENTS_SERVICE_URL: http://events-service:8082 
-      GRADUAL_MIGRATION: "true" # вкл/выкл простого фиче-флага
-      MOVIES_MIGRATION_PERCENT: "50" # процент миграции
-    networks:
-      - cinemaabyss-network
-```
-
-- После реализации запустите postman тесты - они все должны быть зеленые.
-- Отправьте запросы к API Gateway:
-   ```bash
-   curl http://localhost:8000/api/movies
-   ```
-- Протестируйте постепенный переход, изменив переменную окружения MOVIES_MIGRATION_PERCENT в файле docker-compose.yml.
+Реализован сервис cinema.proxy на базе YARP прокси. Добавлена новая стратегия маршрутизации.
+Реализация стратегии проверена. Тесты все проходят.
 
 ### 2. Kafka
- Вам как архитектуру нужно также проверить гипотезу насколько просто реализовать применение Kafka в данной архитектуре.
+Вам как архитектуру нужно также проверить гипотезу насколько просто реализовать применение Kafka в данной архитектуре.
 
-Для этого нужно сделать MVP сервис events, который будет при вызове API создавать и сам же читать сообщения в топике Kafka.
+Реализован сервис cinema.events с consumer'ами и producer'ами.
+Тесты все проходят.
 
-    - Разработайте сервис на любом языке программирования с consumer'ами и producer'ами.
-    - Реализуйте простой API, при вызове которого будут создаваться события User/Payment/Movie и обрабатываться внутри сервиса с записью в лог
-    - Добавьте в docker-compose новый сервис, kafka там уже есть
-
-Необходимые тесты для проверки этого API вызываются при запуске npm run test:local из папки tests/postman 
-Приложите скриншот тестов и скриншот состояния топиков Kafka http://localhost:8090 
+![скриншот тестов](docs/newman_tests.png)
+![скриншот состояния топиков Kafka](docs/topics.png)
 
 
 ## Задание 3
@@ -71,6 +46,8 @@
 ### CI/CD
 
  В папке .github/worflows доработайте деплой новых сервисов proxy и events в docker-build-push.yml , чтобы api-tests при сборке отрабатывали корректно при отправке коммита в вашу новую ветку.
+
+Доработаны worflows для тестов и для пуша образов. 
 
 Нужно доработать 
 ```yaml
@@ -171,10 +148,14 @@ cat .docker/config.json | base64
   - Доработайте ingress.yaml, чтобы можно было с помощью тестов проверить создание событий
   - Выполните дальшейшие шаги для поднятия кластера:
 
+
   1. Создайте namespace:
   ```bash
   kubectl apply -f src/kubernetes/namespace.yaml
   ```
+
+  1. 1. helm install --namespace cinemaabyss nginx ingress-nginx --repo https://kubernetes.github.io/ingress-nginx
+
   2. Создайте секреты и переменные
   ```bash
   kubectl apply -f src/kubernetes/configmap.yaml
@@ -271,9 +252,16 @@ cat .docker/config.json | base64
   Часть тестов с health-чек упадет, но создание событий отработает.
   Откройте логи event-service и сделайте скриншот обработки событий
 
+![скриншот тестов](docs/kubernetes_newman_tests.png)
+
+
 #### Шаг 3
 Добавьте сюда скриншота вывода при вызове https://cinemaabyss.example.com/api/movies и  скриншот вывода event-service после вызова тестов.
 
+![Скриншот вывода при вызове https://cinemaabyss.example.com/api/movies](docs/cinemaabyss.example.com7api7movies.png)
+![Скриншот вывода при вызове https://cinemaabyss.example.com/api/movies](docs/cinemaabyss.example.com7api7movies_pretty.png)
+
+![Скриншот вывода event-service после вызова тестов](docs/kubernetes_consuming.png)
 
 ## Задание 4
 Для простоты дальнейшего обновления и развертывания вам как архитектуру необходимо так же реализовать helm-чарты для прокси-сервиса и проверить работу 
@@ -349,6 +337,8 @@ minikube tunnel
 https://cinemaabyss.example.com/api/movies
 и приложите скриншот развертывания helm и вывода https://cinemaabyss.example.com/api/movies
 
+![Скриншот развертывания helm](docs/helm_install.png)
+![Скриншот вывода cinemaabyss.example.com/api/movies](docs/helm_cinemaabyss.example.com7api7movies.png)
 
 # Задание 5
 Компания планирует активно развиваться и для повышения надежности, безопасности, реализации сетевых паттернов типа Circuit Breaker и канареечного деплоя вам как архитектору необходимо развернуть istio и настроить circuit breaker для monolith и movies сервисов.
@@ -414,6 +404,10 @@ You can see 21 for the upstream_rq_pending_overflow value which means 21 calls s
 ```
 
 Приложите скриншот работы circuit breaker'а
+
+istio_circuit_braker
+![Скриншот вывода cinemaabyss.example.com/api/movies](docs/istio_circuit_braker.png)
+
 
 Удаляем все
 ```bash

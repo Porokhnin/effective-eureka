@@ -1,0 +1,33 @@
+@cinema.events_HostAddress = http://localhost:8082
+
+GET {{cinema.events_HostAddress}}/health/
+Accept: application/json
+
+###
+
+POST {{cinema.events_HostAddress}}/api/events/movie
+Content-Type: application/json
+
+{
+  //CreateMovieEventRequest
+}
+
+###
+
+POST {{cinema.events_HostAddress}}/api/events/payment
+Content-Type: application/json
+
+{
+  //CreatePaymentEventRequest
+}
+
+###
+
+POST {{cinema.events_HostAddress}}/api/events/user
+Content-Type: application/json
+
+{
+  //CreateUserEventRequest
+}
+
+###
